@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>행복지수 테스트</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', 'Nanum Gothic', sans-serif;
+      background-color: #fffafc;
+      color: #333;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #ff69b4;
+      font-weight: bold;
+    }
+    .question-container {
+      display: none;
+      text-align: center;
+    }
+    .question-text {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+    .options label {
+      display: block;
+      margin: 10px auto;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button {
+      display: block;
+      margin: 30px auto;
+      padding: 10px 20px;
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .result {
+      text-align: center;
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #ffe4ec;
+      border-radius: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>😊 행복지수 테스트</h1>
+  <p style="text-align:center; font-weight: bold;">최근 1주일 동안 나는 이 행동을 얼마나 자주 했는가?</p>
+
+  <div class="question-container" id="questionContainer">
+    <div class="question-text" id="questionText"></div>
+    <div class="options" id="options"></div>
+    <button onclick="nextQuestion()">다음</button>
+  </div>
+
+  <div class="result" id="result" style="display:none;"></div>
+
+  <script>
+    const questions = [
+      '웃으면서 대화하거나 이야기했다.',
+      '감사하다고 느낀 일이나 순간이 있었다.',
+      '실내를 벗어나 산책하거나 햇빛을 쬐었다.',
+      '스마트폰이나 일에서 벗어나 혼자만의 시간을 가졌다.',
+      '친구나 가족과 연락하거나 직접 만났다.',
+      '식사하면서 ‘맛있다’고 느끼며 천천히 먹었다.',
+      '나 자신에게 긍정적인 말을 해보았다.',
+      '잠들기 전 오늘 좋았던 일을 떠올려보았다.',
+      '누군가에게 도움을 주거나 받은 일이 있었다.',
+      '좋아하는 활동(음악 듣기, 독서, 취미 등)을 즐겼다.'
+    ];
+
+    const answers = [
+      { label: '전혀 하지 않았다', value: 1 },
+      { label: '1~2일 했다', value: 2 },
+      { label: '3~4일 했다', value: 3 },
+      { label: '5~6일 했다', value: 4 },
+      { label: '매일 했다', value: 5 }
+    ];
+
+    let currentQuestion = 0;
+    let selectedValues = [];
+
+    function showQuestion(index) {
+      const container = document.getElementById('questionContainer');
+      const text = document.getElementById('questionText');
+      const options = document.getElementById('options');
+
+      if (index < questions.length) {
+        text.textContent = `${index + 1}. ${questions[index]}`;
+        options.innerHTML = '';
+        answers.forEach((a, i) => {
+          const inputId = `opt${i}`;
+          options.innerHTML += `
+            <label for="${inputId}">
+              <input type="radio" name="answer" id="${inputId}" value="${a.value}"> ${a.label}
+            </label>
+          `;
+        });
+        container.style.display = 'block';
+      }
+    }
+
+    function nextQuestion() {
+      const selected = document.querySelector('input[name="answer"]:checked');
+      if (!selected) {
+        alert('선택지를 골라주세요!');
+        return;
+      }
+      selectedValues.push(parseInt(selected.value));
+      currentQuestion++;
+
+      if (currentQuestion < questions.length) {
+        showQuestion(currentQuestion);
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      const total = selectedValues.reduce((a, b) => a + b, 0);
+      let resultText = '';
+      let emoji = '';
+      if (total >= 41) {
+        emoji = '🌞';
+        resultText = '당신은 일상 속 행복 실천가! 지금처럼만 계속하세요 💖';
+      } else if (total >= 31) {
+        emoji = '🌤';
+        resultText = '좋은 흐름이에요. 한두 가지 습관만 더해보세요 ✨';
+      } else if (total >= 21) {
+        emoji = '🌥';
+        resultText = '작은 습관 하나가 행복을 불러올 수 있어요 🌱';
+      } else if (total >= 11) {
+        emoji = '🌧';
+        resultText = '행복 습관을 의식적으로 실천해 보세요 ☔';
+      } else {
+        emoji = '🌪';
+        resultText = '지금은 자기 돌봄이 필요한 시기예요. 자신에게 친절하게 대해 주세요 💗';
+      }
+
+      document.getElementById('questionContainer').style.display = 'none';
+      const resultDiv = document.getElementById('result');
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = `
+        <div class="emoji" style="font-size:64px;">${emoji}</div>
+        <h2>당신의 행복 점수는 ${total}점!</h2>
+        <p>${resultText}</p>
+      `;
+    }
+
+    window.onload = () => {
+      showQuestion(currentQuestion);
+    };
+  </script>
+</body>
+</html>
