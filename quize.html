@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>행복지수 테스트</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #fffafc;
+      color: #333;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #ff69b4;
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    .options label {
+      display: block;
+      margin: 5px 0;
+    }
+    button {
+      display: block;
+      margin: 30px auto;
+      padding: 10px 20px;
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .result {
+      text-align: center;
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #ffe4ec;
+      border-radius: 15px;
+    }
+    .emoji {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>😊 행복지수 테스트</h1>
+  <p style="text-align:center">최근 1주일 동안 나는 이 행동을 얼마나 자주 했는가?</p>
+  <form id="quizForm">
+    <div class="question" id="questionsContainer"></div>
+    <button type="button" onclick="calculateScore()">결과 보기</button>
+  </form>
+  <div class="result" id="result" style="display:none;"></div>
+
+  <script>
+    const questions = [
+      '웃으면서 대화하거나 이야기했다.',
+      '감사하다고 느낀 일이나 순간이 있었다.',
+      '실내를 벗어나 산책하거나 햇빛을 쬐었다.',
+      '스마트폰이나 일에서 벗어나 혼자만의 시간을 가졌다.',
+      '친구나 가족과 연락하거나 직접 만났다.',
+      '식사하면서 ‘맛있다’고 느끼며 천천히 먹었다.',
+      '나 자신에게 긍정적인 말을 해보았다.',
+      '잠들기 전 오늘 좋았던 일을 떠올려보았다.',
+      '누군가에게 도움을 주거나 받은 일이 있었다.',
+      '좋아하는 활동(음악 듣기, 독서, 취미 등)을 즐겼다.'
+    ];
+
+    const answers = [
+      { label: '전혀 하지 않았다', value: 1 },
+      { label: '1~2번 했다', value: 2 },
+      { label: '3~4번 했다', value: 3 },
+      { label: '5~6번 했다', value: 4 },
+      { label: '매일 했다', value: 5 }
+    ];
+
+    const questionsContainer = document.getElementById('questionsContainer');
+    questions.forEach((q, i) => {
+      const div = document.createElement('div');
+      div.className = 'question';
+      div.innerHTML = `<strong>${i + 1}. ${q}</strong><div class="options">` +
+        answers.map((a, j) => `
+          <label>
+            <input type="radio" name="q${i}" value="${a.value}" required> ${a.label}
+          </label>
+        `).join('') + '</div>';
+      questionsContainer.appendChild(div);
+    });
+
+    function calculateScore() {
+      const form = document.forms['quizForm'];
+      let score = 0;
+      for (let i = 0; i < questions.length; i++) {
+        const val = form[`q${i}`].value;
+        if (!val) {
+          alert('모든 문항에 응답해 주세요.');
+          return;
+        }
+        score += parseInt(val);
+      }
+
+      let resultText = '';
+      let emoji = '';
+      if (score >= 41) {
+        emoji = '🌞';
+        resultText = '당신은 일상 속 행복 실천가! 지금처럼만 계속하세요 💖';
+      } else if (score >= 31) {
+        emoji = '🌤';
+        resultText = '좋은 흐름이에요. 한두 가지 습관만 더해보세요 ✨';
+      } else if (score >= 21) {
+        emoji = '🌥';
+        resultText = '작은 습관 하나가 행복을 불러올 수 있어요 🌱';
+      } else if (score >= 11) {
+        emoji = '🌧';
+        resultText = '행복 습관을 의식적으로 실천해 보세요 ☔';
+      } else {
+        emoji = '🌪';
+        resultText = '지금은 자기 돌봄이 필요한 시기예요. 자신에게 친절하게 대해 주세요 💗';
+      }
+
+      document.getElementById('result').style.display = 'block';
+      document.getElementById('result').innerHTML = `
+        <div class="emoji">${emoji}</div>
+        <h2>당신의 행복 점수는 ${score}점!</h2>
+        <p>${resultText}</p>
+      `;
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
