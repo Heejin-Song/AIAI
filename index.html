@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <title>행복지수 테스트</title>
+  <meta charset="UTF-8">
+  <title>성격 유형 테스트</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: 'Segoe UI', 'Nanum Gothic', sans-serif;
-      background-color: #fffafc;
+      background-color: #fff9fb;
       color: #333;
-      padding: 20px;
+      padding: 30px;
       max-width: 600px;
       margin: auto;
     }
@@ -22,19 +23,60 @@
       text-align: center;
     }
     .question-text {
-      font-size: 20px;
+      font-size: 22px;
       font-weight: bold;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
     }
-    .options label {
-      display: block;
-      margin: 10px auto;
-      font-size: 16px;
+    .options {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+    .option-box {
+      background-color: #ffcce0;
+      border-radius: 15px;
+      padding: 15px 20px;
+      font-size: 18px;
+      font-weight: 600;
+      width: 100%;
+      max-width: 400px;
       cursor: pointer;
+      border: 3px solid transparent;
+      transition: all 0.3s ease;
+    }
+    .option-box:hover {
+      background-color: #ffb6d2;
+    }
+    .option-box.selected {
+      border-color: #ff69b4;
+      background-color: #ff99cc;
     }
     button {
       display: block;
-      margin: 30px auto;
+      margin: 40px auto;
+      padding: 12px 24px;
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .result {
+      text-align: center;
+      margin-top: 30px;
+      padding: 25px;
+      background-color: #ffe4ec;
+      border-radius: 18px;
+    }
+    .emoji {
+      font-size: 50px;
+      margin-bottom: 12px;
+    }
+    .share-button {
+      margin-top: 20px;
       padding: 10px 20px;
       background-color: #ff69b4;
       color: white;
@@ -43,47 +85,63 @@
       font-size: 16px;
       cursor: pointer;
     }
-    .result {
-      text-align: center;
-      margin-top: 30px;
-      padding: 20px;
-      background-color: #ffe4ec;
-      border-radius: 15px;
-    }
   </style>
 </head>
 <body>
-  <h1>😊 행복지수 테스트</h1>
-  <p style="text-align:center; font-weight: bold;">최근 1주일 동안 나는 이 행동을 얼마나 자주 했는가?</p>
-
+  <h1>🎭 당신의 숨겨진 성격 캐릭터는?</h1>
+  <p style="text-align:center; font-weight: bold;">아래 문항을 읽고 평소 당신과 가장 가까운 답을 골라보세요.</p>
   <div class="question-container" id="questionContainer">
     <div class="question-text" id="questionText"></div>
     <div class="options" id="options"></div>
     <button onclick="nextQuestion()">다음</button>
   </div>
-
   <div class="result" id="result" style="display:none;"></div>
 
   <script>
     const questions = [
-      '웃으면서 대화하거나 이야기했다.',
-      '감사하다고 느낀 일이나 순간이 있었다.',
-      '실내를 벗어나 산책하거나 햇빛을 쬐었다.',
-      '스마트폰이나 일에서 벗어나 혼자만의 시간을 가졌다.',
-      '친구나 가족과 연락하거나 직접 만났다.',
-      '식사하면서 ‘맛있다’고 느끼며 천천히 먹었다.',
-      '나 자신에게 긍정적인 말을 해보았다.',
-      '잠들기 전 오늘 좋았던 일을 떠올려보았다.',
-      '누군가에게 도움을 주거나 받은 일이 있었다.',
-      '좋아하는 활동(음악 듣기, 독서, 취미 등)을 즐겼다.'
+      "새로운 장소에 갔을 때 나는?",
+      "친구가 고민 상담을 하면 나는?",
+      "파티에서의 나는?",
+      "혼자 있는 시간은 나에게?",
+      "할 일이 쌓였을 때 나는?",
+      "주말 계획은 보통?",
+      "내 방이나 작업공간은?",
+      "갑자기 계획이 취소되었을 때 나는?"
     ];
 
     const answers = [
-      { label: '전혀 하지 않았다', value: 1 },
-      { label: '1~2일 했다', value: 2 },
-      { label: '3~4일 했다', value: 3 },
-      { label: '5~6일 했다', value: 4 },
-      { label: '매일 했다', value: 5 }
+      [
+        { label: "계획대로 움직이며 정보를 미리 검색한다", value: 2 },
+        { label: "현장에서 즉흥적으로 결정한다", value: 5 }
+      ],
+      [
+        { label: "조용히 들어주고 공감해 준다", value: 2 },
+        { label: "해결책을 적극적으로 제안한다", value: 5 }
+      ],
+      [
+        { label: "적당히 어울리고 일찍 집에 간다", value: 2 },
+        { label: "중심에 서서 분위기를 띄운다", value: 5 }
+      ],
+      [
+        { label: "에너지 회복의 시간!", value: 2 },
+        { label: "지루하고 외롭다", value: 5 }
+      ],
+      [
+        { label: "우선순위를 정리하고 하나씩 해결한다", value: 2 },
+        { label: "갑자기 엄청난 집중력을 발휘한다", value: 5 }
+      ],
+      [
+        { label: "집에서 휴식하며 충전한다", value: 2 },
+        { label: "친구들과 약속을 잡는다", value: 5 }
+      ],
+      [
+        { label: "깔끔하게 정돈되어 있다", value: 2 },
+        { label: "창의적인(?) 혼돈이 존재한다", value: 5 }
+      ],
+      [
+        { label: "기분이 좋아지고 계획을 새로 짠다", value: 2 },
+        { label: "섭섭하고 뭔가 허전하다", value: 5 }
+      ]
     ];
 
     let currentQuestion = 0;
@@ -97,25 +155,28 @@
       if (index < questions.length) {
         text.textContent = `${index + 1}. ${questions[index]}`;
         options.innerHTML = '';
-        answers.forEach((a, i) => {
-          const inputId = `opt${i}`;
-          options.innerHTML += `
-            <label for="${inputId}">
-              <input type="radio" name="answer" id="${inputId}" value="${a.value}"> ${a.label}
-            </label>
-          `;
+        answers[index].forEach((a, i) => {
+          const div = document.createElement('div');
+          div.className = 'option-box';
+          div.textContent = a.label;
+          div.dataset.value = a.value;
+          div.onclick = function() {
+            document.querySelectorAll('.option-box').forEach(el => el.classList.remove('selected'));
+            this.classList.add('selected');
+          };
+          options.appendChild(div);
         });
         container.style.display = 'block';
       }
     }
 
     function nextQuestion() {
-      const selected = document.querySelector('input[name="answer"]:checked');
+      const selected = document.querySelector('.option-box.selected');
       if (!selected) {
         alert('선택지를 골라주세요!');
         return;
       }
-      selectedValues.push(parseInt(selected.value));
+      selectedValues.push(parseInt(selected.dataset.value));
       currentQuestion++;
 
       if (currentQuestion < questions.length) {
@@ -127,33 +188,50 @@
 
     function showResult() {
       const total = selectedValues.reduce((a, b) => a + b, 0);
-      let resultText = '';
-      let emoji = '';
-      if (total >= 41) {
-        emoji = '🌞';
-        resultText = '당신은 일상 속 행복 실천가! 지금처럼만 계속하세요 💖';
-      } else if (total >= 31) {
-        emoji = '🌤';
-        resultText = '좋은 흐름이에요. 한두 가지 습관만 더해보세요 ✨';
-      } else if (total >= 21) {
-        emoji = '🌥';
-        resultText = '작은 습관 하나가 행복을 불러올 수 있어요 🌱';
-      } else if (total >= 11) {
-        emoji = '🌧';
-        resultText = '행복 습관을 의식적으로 실천해 보세요 ☔';
+      let emoji = '', resultText = '', type = '', description = '';
+
+      if (total <= 14) {
+        emoji = '🌱';
+        type = '조용한 관찰자형';
+        resultText = '감성이 섬세하고 내면이 깊은 사람. 나만의 세계를 소중히 여깁니다.';
+        description = '조용하지만 창의적이며 깊이 있는 통찰력을 가진 당신은 주변의 분위기를 잘 읽고 배려심이 깊습니다. 독립적인 작업이나 소규모 모임에서 진가를 발휘합니다.';
+      } else if (total <= 25) {
+        emoji = '🔍';
+        type = '현실 감각형 탐색가';
+        resultText = '상황을 분석하며 현실적으로 행동하는 성격입니다.';
+        description = '논리적이고 실용적인 사고를 지닌 당신은 문제 해결에 강하며, 구체적인 목표를 세워 성취하는 것을 좋아합니다. 조직적인 환경에서 능력을 발휘합니다.';
+      } else if (total <= 34) {
+        emoji = '🌈';
+        type = '균형 잡힌 공존형';
+        resultText = '내향과 외향의 조화! 유연하게 소통하며 살아갑니다.';
+        description = '다양한 상황에 유연하게 적응하며 사람들과의 조화를 중요시하는 당신은 소통 능력이 뛰어나고 협업에 강합니다. 리더와 팔로워의 역할을 균형 있게 수행합니다.';
       } else {
-        emoji = '🌪';
-        resultText = '지금은 자기 돌봄이 필요한 시기예요. 자신에게 친절하게 대해 주세요 💗';
+        emoji = '🔥';
+        type = '에너지 폭발형 외향인';
+        resultText = '사람과 활동에서 에너지를 얻는 활력 넘치는 성격입니다!';
+        description = '외향적이고 활달한 당신은 사람들과 함께할 때 빛이 납니다. 새로운 도전과 활동을 즐기며, 주도적으로 분위기를 이끄는 리더형입니다.';
       }
 
       document.getElementById('questionContainer').style.display = 'none';
       const resultDiv = document.getElementById('result');
       resultDiv.style.display = 'block';
       resultDiv.innerHTML = `
-        <div class="emoji" style="font-size:64px;">${emoji}</div>
-        <h2>당신의 행복 점수는 ${total}점!</h2>
-        <p>${resultText}</p>
+        <div class="emoji">${emoji}</div>
+        <h2>${type}</h2>
+        <p><strong>${resultText}</strong></p>
+        <p>${description}</p>
+        <p><strong>당신의 점수: ${total}점</strong></p>
+        <button class="share-button" onclick="copyToClipboard()">결과 공유하기 📋</button>
       `;
+    }
+
+    function copyToClipboard() {
+      const textToCopy = document.getElementById('result').innerText;
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        alert("결과가 클립보드에 복사되었습니다!");
+      }, () => {
+        alert("복사에 실패했습니다. 다시 시도해주세요.");
+      });
     }
 
     window.onload = () => {
